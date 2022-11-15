@@ -2,6 +2,7 @@ package com.enoca.controller;
 
 import com.enoca.model.api.request.StudentCreateRequest;
 import com.enoca.model.api.request.StudentUpdateRequest;
+import com.enoca.model.api.response.StudentCoursesResponse;
 import com.enoca.model.api.response.StudentResponse;
 import com.enoca.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,11 @@ public class StudentController {
     @GetMapping("/{id}")
     public StudentResponse getStudentById(@PathVariable Long id) {
         return studentService.findById(id);
+    }
+
+    @GetMapping("/{id}/courses")
+    public StudentCoursesResponse getStudentCoursesById(@PathVariable Long id) {
+        return studentService.findStudentCoursesById(id);
     }
 
     @PostMapping

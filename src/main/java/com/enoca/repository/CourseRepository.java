@@ -10,4 +10,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("select c from Course c order by c.creditScore asc")
     List<Course> findCoursesByOrderedCreditScore();
+
+
 }

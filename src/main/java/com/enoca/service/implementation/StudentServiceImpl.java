@@ -3,6 +3,8 @@ package com.enoca.service.implementation;
 import com.enoca.mapper.StudentResponseMapper;
 import com.enoca.model.api.request.StudentCreateRequest;
 import com.enoca.model.api.request.StudentUpdateRequest;
+import com.enoca.model.api.response.CourseResponse;
+import com.enoca.model.api.response.StudentCoursesResponse;
 import com.enoca.model.api.response.StudentResponse;
 import com.enoca.model.entity.Course;
 import com.enoca.model.entity.Student;
@@ -41,6 +43,21 @@ public class StudentServiceImpl implements StudentService {
             throw new NotFoundException("Student not found by id :" + id);
         }
         return studentResponseMapper.map(optionalStudent.get());
+    }
+
+    @Transactional(readOnly = true)
+    public StudentCoursesResponse findStudentCoursesById(Long id) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isEmpty()) {
+            throw new NotFoundException("Student not found by id :" + id);
+        }
+        Student student = optionalStudent.get();
+        List<CourseResponse> courseResponseList = student.getCourses()
+                .stream()
+                .map(course -> new CourseResponse(course.getId(), course.getName(), course.getCreditScore()))
+                .collect(Collectors.toList());
+        return new StudentCoursesResponse(student.getId(), student.getName(), student.getBirtOfDate(),
+                student.getAddress(), student.getGender(), courseResponseList);
     }
 
     @Transactional
